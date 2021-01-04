@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvVideos.setLayoutManager(lm);
-        VideosAdapter videosAdapter = new VideosAdapter(this, null);
+        videosAdapter = new VideosAdapter(this, null);
         rvVideos.setAdapter(videosAdapter);
 
         makeHttpRequest();
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private void onPostResponseCalls(String rawJsonResponse){
         if(!TextUtils.isEmpty(rawJsonResponse)){
             ArrayList<PojoUser> userArrayList = JsonParser.parseRawResponse(rawJsonResponse);
-
+            videosAdapter.addVideos(userArrayList);
         }
         else{
             Toast.makeText(this, "Error while fetching data.", Toast.LENGTH_SHORT).show();

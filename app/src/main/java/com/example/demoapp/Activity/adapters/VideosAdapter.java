@@ -53,4 +53,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdap
             epVideosPlayer = itemView.findViewById(R.id.epVideoPlayer);
         }
     }
+
+    public void addVideos(ArrayList<PojoUser> userArrayList){
+        this.userArrayList = userArrayList;
+        notifyDataSetChanged();
+    }
 }
