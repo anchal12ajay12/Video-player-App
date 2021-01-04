@@ -7,19 +7,30 @@ import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.demoapp.R;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     RecyclerView rvVideos;
     VideosAdapter videosAdapter;
@@ -40,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         rvVideos = findViewById(R.id.rvVideos);
 
-
         makeHttpRequest();
     }
 
@@ -57,6 +67,22 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         OkHttpClient client = new OkHttpClient();
-
+        RequestBody body = RequestBody.create(String.valueOf(jsonObject), JSON);
+        Request request = new Request.Builder().url(url).post(body).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("TAGcs", "run: " + e.getMessage());
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Log.d("TAGcs", "onResponse: " + response.body().string());
+            }
+        });
     }
 }
