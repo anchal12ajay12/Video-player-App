@@ -1,18 +1,21 @@
-package com.example.demoapp.Activity;
+package com.example.demoapp.Activity.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.demoapp.Activity.adapters.VideosAdapter;
+import com.example.demoapp.Activity.pojos.PojoUser;
+import com.example.demoapp.Activity.utilities.JsonParser;
 import com.example.demoapp.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -51,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
 
         rvVideos = findViewById(R.id.rvVideos);
 
+        LinearLayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        rvVideos.setLayoutManager(lm);
+        VideosAdapter videosAdapter = new VideosAdapter(this, null);
+        rvVideos.setAdapter(videosAdapter);
+
         makeHttpRequest();
     }
 
@@ -72,17 +81,23 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d("TAGcs", "run: " + e.getMessage());
-                    }
-                });
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show());
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Log.d("TAGcs", "onResponse: " + response.body().string());
+                final String rawJsonResponse = response.body().string();
+                runOnUiThread(() -> onPostResponseCalls(rawJsonResponse));
             }
         });
+    }
+
+    private void onPostResponseCalls(String rawJsonResponse){
+        if(!TextUtils.isEmpty(rawJsonResponse)){
+            ArrayList<PojoUser> userArrayList = JsonParser.parseRawResponse(rawJsonResponse);
+
+        }
+        else{
+            Toast.makeText(this, "Error while fetching data.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

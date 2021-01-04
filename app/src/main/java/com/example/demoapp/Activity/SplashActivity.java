@@ -2,23 +2,17 @@ package com.example.demoapp.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
+import com.example.demoapp.Activity.activities.MainActivity;
 import com.example.demoapp.R;
-
-import static android.view.ViewAnimationUtils.createCircularReveal;
 
 public class SplashActivity extends AppCompatActivity {
 
