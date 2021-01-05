@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     tools:context=".Activity.activities.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_above="@+id/ll_bottom"
@@ -19,13 +20,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.example.demoapp.Activity.utilities.ExoPlayerRecyclerView
                 android:id="@+id/rvVideos"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </androidx.recyclerview.widget.RecyclerView>
+                android:layout_height="match_parent"
+                android:background="#dedede"
+                />
+
         </RelativeLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@color/white"
+            android:id="@+id/ll_progress_container"
+            android:orientation="vertical">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,7 +66,7 @@
                 android:layout_height="40dp"
                 android:layout_margin="10dp"
                 android:padding="5dp"
-                android:src="@drawable/ic_home_black_24dp"
+                app:srcCompat="@drawable/ic_home_black_24dp"
                 app:tint="@color/white" />
         </LinearLayout>
 
@@ -75,7 +93,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
                         android:padding="5dp"
-                        android:src="@drawable/ic_baseline_add_24"
+                        app:srcCompat="@drawable/ic_baseline_add_24"
                         app:tint="@color/app_color" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -92,7 +110,7 @@
                 android:layout_height="40dp"
                 android:layout_margin="10dp"
                 android:padding="5dp"
-                android:src="@drawable/ic_baseline_person_24"
+                app:srcCompat="@drawable/ic_baseline_person_24"
                 app:tint="@color/white" />
         </LinearLayout>
     </LinearLayout>

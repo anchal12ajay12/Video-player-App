@@ -1,20 +1,34 @@
 package com.example.demoapp.Activity.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.app.ActionBar;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.demoapp.Activity.adapters.VideosAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.demoapp.Activity.adapters.MediaRecyclerAdapter;
 import com.example.demoapp.Activity.pojos.PojoUser;
+import com.example.demoapp.Activity.utilities.ExoPlayerRecyclerView;
 import com.example.demoapp.Activity.utilities.JsonParser;
 import com.example.demoapp.R;
 
@@ -33,34 +47,76 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+
 public class MainActivity extends AppCompatActivity {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    RecyclerView rvVideos;
-    VideosAdapter videosAdapter;
+    LinearLayout ll_progress_container;
+    ExoPlayerRecyclerView mRecyclerView;
+    private final ArrayList<PojoUser> mediaObjectList = new ArrayList<>();
+    private MediaRecyclerAdapter mAdapter;
+    private boolean firstTime = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.WHITE);
-        }
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.app_color));
         }
 
-        rvVideos = findViewById(R.id.rvVideos);
 
-        LinearLayoutManager lm = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        rvVideos.setLayoutManager(lm);
-        videosAdapter = new VideosAdapter(this, null);
-        rvVideos.setAdapter(videosAdapter);
+        initView();
+        ll_progress_container = findViewById(R.id.ll_progress_container);
+
+
+
+        if (firstTime) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    mRecyclerView.playVideo(false);
+                }
+            });
+            firstTime = false;
+        }
+
 
         makeHttpRequest();
+
+    }
+
+    void hideStatusBar() {
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    private void initView() {
+
+        mRecyclerView = findViewById(R.id.rvVideos);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(mRecyclerView);
+    }
+
+        private RequestManager initGlide() {
+        RequestOptions options = new RequestOptions();
+        return Glide.with(this)
+                .setDefaultRequestOptions(options);
+    }
+    @Override
+    protected void onDestroy() {
+        if (mRecyclerView != null) {
+            mRecyclerView.releasePlayer();
+        }
+        super.onDestroy();
     }
 
     public void makeHttpRequest(){
@@ -94,7 +150,12 @@ public class MainActivity extends AppCompatActivity {
     private void onPostResponseCalls(String rawJsonResponse){
         if(!TextUtils.isEmpty(rawJsonResponse)){
             ArrayList<PojoUser> userArrayList = JsonParser.parseRawResponse(rawJsonResponse);
-            videosAdapter.addVideos(userArrayList);
+            ll_progress_container.setVisibility(View.GONE);
+            mRecyclerView.setMediaObjects(userArrayList);
+            mAdapter = new MediaRecyclerAdapter(userArrayList, initGlide());
+            //Set Adapter
+            mRecyclerView.setAdapter(mAdapter);
+//            videosAdapter.addVideos(userArrayList);
         }
         else{
             Toast.makeText(this, "Error while fetching data.", Toast.LENGTH_SHORT).show();

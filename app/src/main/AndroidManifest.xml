@@ -14,7 +14,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.DemoApp">
         <activity android:name=".Activity.activities.MainActivity"/>
-        <activity android:name=".Activity.SplashActivity">
+        <activity android:name=".Activity.activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

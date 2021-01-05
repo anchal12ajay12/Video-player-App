@@ -4,11 +4,42 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/epVideoPlayer"
+    <FrameLayout
+        android:id="@+id/mediaContainer"
         android:layout_width="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+        <ImageView
+            android:id="@+id/ivMediaCoverImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:scaleType="centerCrop"
+            />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            style="?android:attr/progressBarStyle"
+            />
+
+    </FrameLayout>
+
+
+<!--    <com.google.android.exoplayer2.ui.PlayerView-->
+<!--        android:id="@+id/epVideoPlayer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_height="match_parent"/>-->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,8 +52,28 @@
         android:orientation="vertical"
         android:visibility="visible">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="32dp"
+                android:id="@+id/ivVolumeControl"
+                android:alpha="0"
+                android:animateLayoutChanges="true"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_volume_on"
+                app:tint="@color/app_color" />
+
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
+            android:id="@+id/ll_follow"
             android:layout_height="60dp">
 
             <androidx.cardview.widget.CardView
@@ -35,6 +86,8 @@
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="45dp"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/iv_profile_pic"
                     android:src="@mipmap/ic_launcher" />
 
             </androidx.cardview.widget.CardView>
@@ -45,7 +98,7 @@
                 android:layout_alignBottom="@+id/card_profile_img"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="-10dp"
-                android:src="@drawable/ic_follow_button" />
+                app:srcCompat="@drawable/ic_follow_button" />
 
         </RelativeLayout>
 
@@ -59,7 +112,8 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_like_icon"
+                android:id="@+id/iv_setLike"
+                app:srcCompat="@drawable/ic_like_icon"
                 app:tint="@color/app_color" />
 
             <TextView
@@ -68,6 +122,7 @@
                 android:layout_marginTop="3dp"
                 android:gravity="center"
                 android:text="2.5 M"
+                android:id="@+id/tv_like_count"
                 android:textColor="@color/app_color"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -85,7 +140,8 @@
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_comment_icon"
+                android:id="@+id/iv_setcomment"
+                app:srcCompat="@drawable/ic_comment_icon"
                 app:tint="@color/app_color" />
 
             <TextView
@@ -94,6 +150,7 @@
                 android:layout_marginTop="3dp"
                 android:gravity="center"
                 android:text="11,0 k"
+                android:id="@+id/tv_comment_count"
                 android:textColor="@color/app_color"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -106,12 +163,13 @@
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="36dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_shared_icon"
+                app:srcCompat="@drawable/ic_shared_icon"
                 app:tint="@color/app_color" />
 
             <TextView
@@ -156,6 +214,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="10dp"
+                    android:id="@+id/tv_user_id"
                     android:singleLine="true"
                     android:text="\@fintory"
                     android:textSize="14sp"
@@ -164,12 +223,14 @@
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/ic_verified" />
+                    android:id="@+id/iv_isVerified"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_verified" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical|start"
                 android:orientation="horizontal">
@@ -180,13 +241,14 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="10dp"
                     android:singleLine="true"
+                    android:id="@+id/tv_description"
                     android:text="Hi this is description."
                     android:textSize="14sp"
                     android:textStyle="normal" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center_vertical|start"
@@ -195,12 +257,12 @@
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/ic_melody_icon" />
+                    app:srcCompat="@drawable/ic_melody_icon" />
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:id="@+id/tv_song"
                     android:singleLine="true"
                     android:layout_marginStart="10dp"
                     android:text="Sound Track. - \@fintory"
@@ -216,7 +278,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_music_player" />
+                app:srcCompat="@drawable/ic_music_player" />
 
             <ImageView
                 android:id="@+id/sp_disc"
@@ -226,7 +288,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginEnd="0dp"
-                android:src="@drawable/ic_spinning_disc" />
+                app:srcCompat="@drawable/ic_spinning_disc" />
 
             <ImageView
                 android:id="@+id/profile_pic"
@@ -241,7 +303,7 @@
                 android:layout_marginEnd="0dp"
                 android:layout_marginBottom="0dp"
                 android:padding="15dp"
-                android:src="@drawable/ic_profile_pic" />
+                app:srcCompat="@drawable/ic_profile_pic" />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

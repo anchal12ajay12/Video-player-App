@@ -1,7 +1,6 @@
 package com.example.demoapp.Activity.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demoapp.Activity.pojos.PojoUser;
 import com.example.demoapp.R;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 
 import java.util.ArrayList;
 
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdapterViewHolder> {
-    private Context mContext;
+    private final Context mContext;
     ArrayList<PojoUser> userArrayList;
 
     boolean playWhenReady = true;
@@ -29,12 +24,12 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdap
     long playbackPosition = 0;
 
     private SimpleExoPlayer player;
-    private PlaybackStateListener playbackStateListener;
+//    private final PlaybackStateListener playbackStateListener;
 
     public VideosAdapter(Context context, ArrayList<PojoUser> userArrayList){
         this.mContext = context;
         this.userArrayList = userArrayList;
-        playbackStateListener = new PlaybackStateListener();
+//        playbackStateListener = new PlaybackStateListener();
     }
 
     @NonNull
@@ -53,25 +48,25 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdap
     }
 
     private void initializePlayer(PlayerView playerView, String videoUri){
-        DefaultTrackSelector trackSelector = new DefaultTrackSelector(mContext);
-        trackSelector.setParameters(
-                trackSelector.buildUponParameters().setMaxVideoSizeSd());
-
-        player = new SimpleExoPlayer
-                .Builder(mContext)
-                .setTrackSelector(trackSelector)
-                .build();
-        playerView.setPlayer(player);
-
-        MediaItem mediaItem = new MediaItem.Builder()
-                .setUri(videoUri)
-                .build();
-        player.setMediaItem(mediaItem);
-
-        player.setPlayWhenReady(playWhenReady);
-        player.seekTo(currentWindow, playbackPosition);
-        player.addListener(playbackStateListener);
-        player.prepare();
+//        DefaultTrackSelector trackSelector = new DefaultTrackSelector(mContext);
+//        trackSelector.setParameters(
+//                trackSelector.buildUponParameters().setMaxVideoSizeSd());
+//
+//        player = new SimpleExoPlayer
+//                .Builder(mContext)
+//                .setTrackSelector(trackSelector)
+//                .build();
+//        playerView.setPlayer(player);
+//
+//        MediaItem mediaItem = new MediaItem.Builder()
+//                .setUri(videoUri)
+//                .build();
+//        player.setMediaItem(mediaItem);
+//
+//        player.setPlayWhenReady(playWhenReady);
+//        player.seekTo(currentWindow, playbackPosition);
+//        player.addListener(playbackStateListener);
+//        player.prepare();
     }
 
     private void releasePlayer() {
@@ -79,7 +74,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdap
             playWhenReady = player.getPlayWhenReady();
             playbackPosition = player.getCurrentPosition();
             currentWindow = player.getCurrentWindowIndex();
-            player.removeListener((Player.EventListener) playbackStateListener);
+//            player.removeListener((Player.EventListener) playbackStateListener);
             player.release();
             player = null;
         }
@@ -96,7 +91,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdap
         public VideosAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            playerView = itemView.findViewById(R.id.epVideoPlayer);
+//            playerView = itemView.findViewById(R.id.epVideoPlayer);
         }
     }
 
@@ -105,29 +100,29 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideosAdap
         notifyDataSetChanged();
     }
 
-    private class PlaybackStateListener implements Player.EventListener{
-
-        @Override
-        public void onPlaybackStateChanged(int playbackState) {
-            String stateString;
-            switch (playbackState) {
-                case ExoPlayer.STATE_IDLE:
-                    stateString = "ExoPlayer.STATE_IDLE      -";
-                    break;
-                case ExoPlayer.STATE_BUFFERING:
-                    stateString = "ExoPlayer.STATE_BUFFERING -";
-                    break;
-                case ExoPlayer.STATE_READY:
-                    stateString = "ExoPlayer.STATE_READY     -";
-                    break;
-                case ExoPlayer.STATE_ENDED:
-                    stateString = "ExoPlayer.STATE_ENDED     -";
-                    break;
-                default:
-                    stateString = "UNKNOWN_STATE             -";
-                    break;
-            }
-            Log.d("TAGvs", "changed state to " + stateString);
-        }
-    }
+//    private static class PlaybackStateListener implements Player.EventListener{
+//
+//        @Override
+//        public void onPlaybackStateChanged(int playbackState) {
+//            String stateString;
+//            switch (playbackState) {
+//                case ExoPlayer.STATE_IDLE:
+//                    stateString = "ExoPlayer.STATE_IDLE      -";
+//                    break;
+//                case ExoPlayer.STATE_BUFFERING:
+//                    stateString = "ExoPlayer.STATE_BUFFERING -";
+//                    break;
+//                case ExoPlayer.STATE_READY:
+//                    stateString = "ExoPlayer.STATE_READY     -";
+//                    break;
+//                case ExoPlayer.STATE_ENDED:
+//                    stateString = "ExoPlayer.STATE_ENDED     -";
+//                    break;
+//                default:
+//                    stateString = "UNKNOWN_STATE             -";
+//                    break;
+//            }
+//            Log.d("TAGvs", "changed state to " + stateString);
+//        }
+//    }
 }

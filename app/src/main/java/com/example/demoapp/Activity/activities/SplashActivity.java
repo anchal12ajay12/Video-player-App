@@ -1,4 +1,4 @@
-package com.example.demoapp.Activity;
+package com.example.demoapp.Activity.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.demoapp.Activity.activities.MainActivity;
 import com.example.demoapp.R;
 
 public class SplashActivity extends AppCompatActivity {
